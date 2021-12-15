@@ -1,4 +1,4 @@
-package stringset
+package goset
 
 import (
 	"fmt"

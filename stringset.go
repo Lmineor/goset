@@ -5,20 +5,20 @@ import (
 	"sync"
 )
 
-type SliceSet struct {
+type stringSet struct {
 	sync.RWMutex
 	m map[string]bool
 }
 
 // New 新建集合对象
-func NewSliceSet(items ...string) *SliceSet {
-	s := &SliceSet{m: make(map[string]bool, len(items))}
+func NewStringSet(items ...string) *stringSet {
+	s := &stringSet{m: make(map[string]bool, len(items))}
 	s.Add(items...)
 	return s
 }
 
 // Add 添加元素
-func (s *SliceSet) Add(items ...string) {
+func (s *stringSet) Add(items ...string) {
 	s.Lock()
 	defer s.Unlock()
 	for _, item := range items {
@@ -27,7 +27,7 @@ func (s *SliceSet) Add(items ...string) {
 }
 
 // Remove 删除元素
-func (s *SliceSet) Remove(items ...string) {
+func (s *stringSet) Remove(items ...string) {
 	s.Lock()
 	defer s.Unlock()
 	for _, item := range items {
@@ -36,7 +36,7 @@ func (s *SliceSet) Remove(items ...string) {
 }
 
 // In 判断元素是否在集合中
-func (s *SliceSet) HasItem(items ...string) bool {
+func (s *stringSet) Contains(items ...string) bool {
 	s.Lock()
 	defer s.Unlock()
 	for _, item := range items {
@@ -47,23 +47,23 @@ func (s *SliceSet) HasItem(items ...string) bool {
 	return true
 }
 
-func (s *SliceSet) Count() int {
+func (s *stringSet) Count() int {
 	return len(s.m)
 }
 
-func (s *SliceSet) Clear() {
+func (s *stringSet) Clear() {
 	s.Lock()
 	defer s.Unlock()
 	s.m = map[string]bool{}
 }
 
 // 空集合判断
-func (s *SliceSet) Empty() bool {
+func (s *stringSet) Empty() bool {
 	return len(s.m) == 0
 }
 
-// 无序列表
-func (s *SliceSet) List() []string {
+// List 返回无序列表
+func (s *stringSet) List() []string {
 	s.RLock()
 	defer s.RUnlock()
 	list := make([]string, 0, len(s.m))
@@ -73,8 +73,8 @@ func (s *SliceSet) List() []string {
 	return list
 }
 
-// 排序列表
-func (s *SliceSet) SortList() []string {
+// SortList 返回排序列表
+func (s *stringSet) SortList() []string {
 	s.RLock()
 	defer s.RUnlock()
 	list := make([]string, 0, len(s.m))
@@ -85,9 +85,9 @@ func (s *SliceSet) SortList() []string {
 	return list
 }
 
-// Intersect is to get the common items between slices
-func (s *SliceSet) Intersect(sets ...*SliceSet) *SliceSet {
-	refer := NewSliceSet(s.List()...)
+// Intersect 返回集合的交集
+func (s *stringSet) Intersect(sets ...*stringSet) *stringSet {
+	refer := NewStringSet(s.List()...)
 	for _, set := range sets {
 		for e := range s.m {
 			if _, ok := set.m[e]; !ok {
@@ -98,8 +98,8 @@ func (s *SliceSet) Intersect(sets ...*SliceSet) *SliceSet {
 	return refer
 }
 
-// Minux is to get the different items between slices
-func (s *SliceSet) Minus(sets ...*SliceSet) *SliceSet {
+// Minux 返回集合的差集
+func (s *stringSet) Minus(sets ...*stringSet) *stringSet {
 	refer := s.Union(sets...)
 	for _, set := range sets {
 		for e := range set.m {
@@ -111,9 +111,9 @@ func (s *SliceSet) Minus(sets ...*SliceSet) *SliceSet {
 	return refer
 }
 
-// Union is to get the all items between slices
-func (s *SliceSet) Union(sets ...*SliceSet) *SliceSet {
-	rerfer := NewSliceSet(s.List()...)
+// Union 返回集合的并集
+func (s *stringSet) Union(sets ...*stringSet) *stringSet {
+	rerfer := NewStringSet(s.List()...)
 	for _, set := range sets {
 		for e := range set.m {
 			rerfer.m[e] = true
@@ -122,9 +122,9 @@ func (s *SliceSet) Union(sets ...*SliceSet) *SliceSet {
 	return rerfer
 }
 
-// 补集
-func (s *SliceSet) Complement(full *SliceSet) *SliceSet {
-	rerfer := NewSliceSet()
+// Complement 补集
+func (s *stringSet) Complement(full *stringSet) *stringSet {
+	rerfer := NewStringSet()
 	for e := range full.m {
 		if _, ok := s.m[e]; !ok {
 			rerfer.Add(e)
