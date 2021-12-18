@@ -10,7 +10,7 @@ type stringSet struct {
 	m map[string]bool
 }
 
-// New 新建集合对象
+// NewStringSet 新建集合对象
 func NewStringSet(items ...string) *stringSet {
 	s := &stringSet{m: make(map[string]bool, len(items))}
 	s.Add(items...)
@@ -35,7 +35,7 @@ func (s *stringSet) Remove(items ...string) {
 	}
 }
 
-// In 判断元素是否在集合中
+// Contains 判断元素是否在集合中
 func (s *stringSet) Contains(items ...string) bool {
 	s.Lock()
 	defer s.Unlock()
@@ -57,7 +57,7 @@ func (s *stringSet) Clear() {
 	s.m = map[string]bool{}
 }
 
-// 空集合判断
+// Empty 空集合判断
 func (s *stringSet) Empty() bool {
 	return len(s.m) == 0
 }
@@ -98,7 +98,7 @@ func (s *stringSet) Intersect(sets ...*stringSet) *stringSet {
 	return refer
 }
 
-// Minux 返回集合的差集
+// Minus 返回集合的差集
 func (s *stringSet) Minus(sets ...*stringSet) *stringSet {
 	refer := s.Union(sets...)
 	for _, set := range sets {
@@ -113,22 +113,22 @@ func (s *stringSet) Minus(sets ...*stringSet) *stringSet {
 
 // Union 返回集合的并集
 func (s *stringSet) Union(sets ...*stringSet) *stringSet {
-	rerfer := NewStringSet(s.List()...)
+	refer := NewStringSet(s.List()...)
 	for _, set := range sets {
 		for e := range set.m {
-			rerfer.m[e] = true
+			refer.m[e] = true
 		}
 	}
-	return rerfer
+	return refer
 }
 
 // Complement 补集
 func (s *stringSet) Complement(full *stringSet) *stringSet {
-	rerfer := NewStringSet()
+	refer := NewStringSet()
 	for e := range full.m {
 		if _, ok := s.m[e]; !ok {
-			rerfer.Add(e)
+			refer.Add(e)
 		}
 	}
-	return rerfer
+	return refer
 }
