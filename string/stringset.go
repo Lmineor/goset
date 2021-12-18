@@ -1,4 +1,4 @@
-package goset
+package string
 
 import (
 	"sort"
