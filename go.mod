@@ -1,3 +1,3 @@
-module github.com/Prolht/goset
+module github.com/Lmineor/goset
 
-go 1.15
+go 1.16
