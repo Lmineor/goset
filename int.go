@@ -6,7 +6,7 @@ import (
 
 type Int map[int]Empty
 
-// NewStringSet 新建集合对象
+// NewInt 新建集合对象
 func NewInt(items ...int) Int {
 	is := Int{}
 	is.Add(items...)
@@ -79,7 +79,7 @@ func (i Int) List() []int {
 	return list
 }
 
-// SortList 返回排序列表
+// SortedList 返回排序列表
 func (i Int) SortedList() []int {
 	list := make([]int, 0, len(i))
 	for item := range i {
@@ -100,7 +100,7 @@ func (i Int) Difference(i2 Int) Int {
 	return refer
 }
 
-// Intersect 返回集合的交集
+// Intersection 返回集合的交集
 func (i Int) Intersection(i2 Int) Int {
 	var longer, shorter Int
 	refer := NewInt()

@@ -1,9 +1,18 @@
 package goset
 
 import (
+	"fmt"
 	"testing"
 )
 
+func TestStringSet1(t *testing.T) {
+	etcdData := String{}
+	neutronData := String{}
+	etcdData.Add("1", "2", "3", "4", "5", "6", "7")
+	neutronData.Add("1", "2", "3", "5", "8")
+	aa := etcdData.Difference(neutronData)
+	fmt.Println(aa.List())
+}
 func TestStringSet(t *testing.T) {
 	s := String{}
 	s2 := String{}
